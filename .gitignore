@@ -1,0 +1,25 @@
+# Archivos y carpetas ignorados por Git
+
+# Documentos subidos por usuarios
+uploads/
+
+# Configuración con credenciales sensibles
+config/app.php
+
+# Logs
+*.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Composer (si se usa en el futuro)
+vendor/
+composer.lock

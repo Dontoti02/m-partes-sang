@@ -1,0 +1,22 @@
+<?php
+// ── Rutas base ──────────────────────────────────────────────
+define('BASE_URL',    '/m-partes-sang/');
+define('BASE_PATH',   dirname(__DIR__));   // raíz del proyecto
+define('VIEW_PATH',   BASE_PATH . '/app/Views/');
+define('UPLOAD_PATH', BASE_PATH . '/uploads/');
+define('ASSET_PATH',  BASE_PATH . '/assets/');
+define('APP_NAME',    'Mesa de Partes Virtual');
+define('APP_INST',    'IESTP Sangarará');
+
+// ── Base de datos ───────────────────────────────────────────
+define('DB_HOST', 'localhost');
+define('DB_USER', 'mesa_user');
+define('DB_PASS', 'TuContraseñaSegura123!');
+define('DB_NAME', 'mesa_partes');
+
+// ── Correo SMTP (Gmail) ────────────────────────────────────
+define('MAIL_TO',   'mesadepartessangarara@gmail.com');
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'tu-cuenta@gmail.com');
+define('SMTP_PASS', 'contraseña-de-aplicacion-16chars');
