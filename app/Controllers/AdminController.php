@@ -110,8 +110,10 @@ class AdminController extends Controller {
 
         $exp = $this->expedienteModel->findById($id);
         if ($exp) {
-            $ruta = UPLOAD_PATH . $exp['archivo'];
-            if (file_exists($ruta)) @unlink($ruta);
+            if (!empty($exp['archivo'])) {
+                $ruta = UPLOAD_PATH . $exp['archivo'];
+                if (file_exists($ruta) && is_file($ruta)) @unlink($ruta);
+            }
             $this->expedienteModel->delete([$id]);
         }
 
@@ -144,9 +146,9 @@ class AdminController extends Controller {
         // Eliminar archivos físicos
         foreach ($ids as $id) {
             $exp = $this->expedienteModel->findById($id);
-            if ($exp) {
+            if ($exp && !empty($exp['archivo'])) {
                 $ruta = UPLOAD_PATH . $exp['archivo'];
-                if (file_exists($ruta)) @unlink($ruta);
+                if (file_exists($ruta) && is_file($ruta)) @unlink($ruta);
             }
         }
 

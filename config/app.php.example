@@ -12,10 +12,10 @@ define('APP_INST',    'IESTP Sangarará');
 define('DB_HOST', 'localhost');
 define('DB_USER', 'mesa_user');
 define('DB_PASS', 'TuContraseñaSegura123!');
-define('DB_NAME', 'mesa_partes');
+define('DB_NAME', 'mesa_partes_sangarara');
 
 // ── Correo SMTP (Gmail) ────────────────────────────────────
-define('MAIL_TO',   'mesadepartessangarara@gmail.com');
+define('MAIL_TO',   'Iestpsanga2023@gmail.com');
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', 587);
 define('SMTP_USER', 'tu-cuenta@gmail.com');

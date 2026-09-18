@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'mesa_partes');
+define('DB_NAME', 'mesa_partes_sangarara');
 
 function getDB(): mysqli {
     static $conn = null;

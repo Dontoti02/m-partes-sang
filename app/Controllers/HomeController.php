@@ -30,27 +30,47 @@ class HomeController extends Controller {
             } elseif (!preg_match('/^\d{8}$/', $dni)) {
                 $error = 'El DNI debe contener exactamente 8 dígitos numéricos.';
 
-            } elseif (empty($_FILES['archivo']['name'])) {
-                $error = 'Debe adjuntar el formulario FUT completado.';
-
             } else {
-                $file = $_FILES['archivo'];
-                $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $hasFile  = !empty($_FILES['archivo']['name']);
+                $filename = null;
+                $dest     = null;
 
-                if ($file['size'] > 10 * 1024 * 1024) {
-                    $error = 'El archivo supera el límite de 10 MB.';
+                if ($hasFile) {
+                    $file = $_FILES['archivo'];
+                    $ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-                } elseif (!in_array($ext, ['pdf','doc','docx'], true)) {
-                    $error = 'Solo se aceptan archivos PDF, DOC o DOCX.';
-
-                } else {
-                    $filename = 'FUT_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-                    $dest     = UPLOAD_PATH . $filename;
-
-                    if (!move_uploaded_file($file['tmp_name'], $dest)) {
-                        $error = 'No se pudo guardar el archivo. Contacte al administrador.';
+                    if ($file['size'] > 10 * 1024 * 1024) {
+                        $error = 'El archivo supera el límite de 10 MB.';
+                    } elseif (!in_array($ext, ['pdf','doc','docx'], true)) {
+                        $error = 'Solo se aceptan archivos PDF, DOC o DOCX.';
                     } else {
-                        $codigo = $this->expedienteModel->create([
+                        $filename = 'FUT_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                        $dest     = UPLOAD_PATH . $filename;
+
+                        if (!move_uploaded_file($file['tmp_name'], $dest)) {
+                            $error = 'No se pudo guardar el archivo adjunto. Contacte al administrador.';
+                            $filename = null;
+                            $dest     = null;
+                        }
+                    }
+                }
+
+                if (!$error) {
+                    $codigo = $this->expedienteModel->create([
+                        'nombres'     => $nombres,
+                        'apellidos'   => $apellidos,
+                        'dni'         => $dni,
+                        'telefono'    => $telefono,
+                        'email'       => $email,
+                        'asunto'      => $asunto,
+                        'descripcion' => $descripcion,
+                        'archivo'     => $filename,
+                        'ip'          => $_SERVER['REMOTE_ADDR'] ?? '',
+                    ]);
+
+                    if ($codigo) {
+                        $datosExp = [
+                            'codigo'      => $codigo,
                             'nombres'     => $nombres,
                             'apellidos'   => $apellidos,
                             'dni'         => $dni,
@@ -59,30 +79,22 @@ class HomeController extends Controller {
                             'asunto'      => $asunto,
                             'descripcion' => $descripcion,
                             'archivo'     => $filename,
-                            'ip'          => $_SERVER['REMOTE_ADDR'] ?? '',
-                        ]);
+                        ];
 
-                        if ($codigo) {
-                            $mailOk = Mailer::enviarExpediente([
-                                'codigo'      => $codigo,
-                                'nombres'     => $nombres,
-                                'apellidos'   => $apellidos,
-                                'dni'         => $dni,
-                                'telefono'    => $telefono,
-                                'email'       => $email,
-                                'asunto'      => $asunto,
-                                'descripcion' => $descripcion,
-                                'archivo'     => $filename,
-                            ], $dest);
+                        $mailOk = Mailer::enviarExpediente($datosExp, $dest);
+                        if (!$mailOk) {
+                            error_log("Mesa de Partes: no se pudo enviar el correo del expediente $codigo a la institución");
+                        }
 
-                            if (!$mailOk) {
-                                error_log("Mesa de Partes: no se pudo enviar el correo del expediente $codigo");
-                            }
+                        if (!empty($email)) {
+                            Mailer::enviarConstanciaCiudadano($datosExp);
+                        }
 
-                            $_SESSION['mp_success'] = $codigo;
-                            $this->redirect('gracias');
-                        } else {
-                            $error = 'Error al registrar el expediente. Intente nuevamente.';
+                        $_SESSION['mp_success'] = $codigo;
+                        $this->redirect('gracias');
+                    } else {
+                        $error = 'Error al registrar el expediente. Intente nuevamente.';
+                        if ($dest && file_exists($dest)) {
                             @unlink($dest);
                         }
                     }

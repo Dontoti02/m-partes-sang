@@ -99,7 +99,8 @@ $estadoLabel = ['pendiente'=>'Pendiente','aprobado'=>'Aprobado','rechazado'=>'Re
       <div class="divider"></div>
 
       <!-- Documento adjunto -->
-      <p class="section-label">Documento FUT Adjunto</p>
+      <p class="section-label">Documento FUT / Adjunto</p>
+      <?php if (!empty($expediente['archivo'])): ?>
       <a href="<?= BASE_URL ?>uploads/<?= rawurlencode($expediente['archivo']) ?>" target="_blank" class="btn btn-outline" style="margin-bottom:.5rem;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -107,9 +108,15 @@ $estadoLabel = ['pendiente'=>'Pendiente','aprobado'=>'Aprobado','rechazado'=>'Re
           <line x1="12" y1="18" x2="12" y2="12"/>
           <polyline points="9 15 12 18 15 15"/>
         </svg>
-        Ver / Descargar FUT adjunto
+        Ver / Descargar archivo adjunto
       </a>
       <p class="file-meta">Archivo: <code><?= htmlspecialchars($expediente['archivo']) ?></code></p>
+      <?php else: ?>
+      <div style="padding:10px 14px;background:#f3f4f6;border-radius:6px;color:#6b7280;font-size:13px;display:inline-flex;align-items:center;gap:8px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        El solicitante no adjuntó ningún archivo en este trámite.
+      </div>
+      <?php endif; ?>
 
       <div class="divider"></div>
 

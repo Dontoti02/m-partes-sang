@@ -4,8 +4,8 @@ $conn = new mysqli('localhost', 'root', '');
 if ($conn->connect_error) die('Error: ' . $conn->connect_error);
 
 $sql = "
-CREATE DATABASE IF NOT EXISTS mesa_partes CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE mesa_partes;
+CREATE DATABASE IF NOT EXISTS mesa_partes_sangarara CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE mesa_partes_sangarara;
 
 CREATE TABLE IF NOT EXISTS expedientes (
     id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS expedientes (
     email       VARCHAR(120),
     asunto      VARCHAR(255) NOT NULL,
     descripcion TEXT,
-    archivo     VARCHAR(255) NOT NULL,
+    archivo     VARCHAR(255) NULL DEFAULT NULL,
     estado      ENUM('pendiente','aprobado','rechazado') DEFAULT 'pendiente',
     comentario  TEXT,
     ip          VARCHAR(45),

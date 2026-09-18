@@ -43,7 +43,7 @@ require VIEW_PATH . 'layouts/header.php';
     </li>
     <li class="step-item">
       <span class="step-num">4</span>
-      <span>Adjunte y envíe</span>
+      <span>Adjunte (opcional) y envíe</span>
     </li>
     <li class="step-sep">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -77,8 +77,8 @@ require VIEW_PATH . 'layouts/header.php';
         </svg>
       </div>
       <div>
-        <h2 class="dl-title">Formulario Único de Trámite &mdash; FUT</h2>
-        <p class="dl-desc">Descargue el formulario, complételo, fírmelo y adjúntelo en el formulario de abajo.</p>
+        <h2 class="dl-title">Formulario Único de Trámite &mdash; FUT (Opcional)</h2>
+        <p class="dl-desc">Descargue el formulario si requiere adjuntarlo formalmente, o envíe directamente su trámite llenando sus datos abajo.</p>
       </div>
     </div>
     <a href="<?= BASE_URL ?>assets/FUT IESTP SANGARARA.docx" download class="btn btn-accent">
@@ -209,11 +209,11 @@ require VIEW_PATH . 'layouts/header.php';
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
           </svg>
         </div>
-        <h2 class="card-title">Adjuntar FUT Completado <span class="required">*</span></h2>
+        <h2 class="card-title">Adjuntar FUT u otro documento <span style="font-size:.85rem;font-weight:normal;color:#6b7280;">(Opcional)</span></h2>
       </div>
       <div class="card-body">
         <div class="upload-area" id="uploadArea">
-          <input type="file" name="archivo" id="archivo" accept=".pdf,.doc,.docx" required>
+          <input type="file" name="archivo" id="archivo" accept=".pdf,.doc,.docx">
           <div class="upload-inner">
             <div class="upload-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -222,14 +222,14 @@ require VIEW_PATH . 'layouts/header.php';
                 <line x1="12" y1="8" x2="12" y2="20"/>
               </svg>
             </div>
-            <p class="upload-label">Haga clic o arrastre su archivo aquí</p>
+            <p class="upload-label">Haga clic o arrastre su archivo aquí (opcional)</p>
             <p class="upload-hint">PDF, DOC o DOCX &mdash; máximo 10 MB</p>
             <p class="upload-name" id="uploadName"></p>
           </div>
         </div>
         <div class="alert alert-info" style="margin-top:.9rem;margin-bottom:0;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          <span>Asegúrese de que el FUT esté correctamente llenado y firmado antes de adjuntarlo.</span>
+          <span>Si cuenta con el FUT u otro archivo de sustento puede adjuntarlo aquí. Si no lo tiene, puede enviar su trámite directamente.</span>
         </div>
       </div>
     </div>
