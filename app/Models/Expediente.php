@@ -8,26 +8,50 @@ class Expediente {
         $this->db = getDB();
     }
 
-    /** Crear nuevo expediente. Retorna código asignado o false */
+    /** Crear nuevo expediente con todos los campos del FUT. Retorna código asignado o false */
     public function create(array $data): string|false {
         $codigo = $this->generarCodigo();
 
         $stmt = $this->db->prepare(
             "INSERT INTO expedientes
-             (codigo, nombres, apellidos, dni, telefono, email, asunto, descripcion, archivo, ip)
-             VALUES (?,?,?,?,?,?,?,?,?,?)"
+             (codigo, nombres, apellidos, dni, cargo, codigo_modular, direccion, distrito, provincia, region,
+              telefono, email, asunto, fundamento, descripcion, documentos_sustento, archivo, ip)
+             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         );
-        $stmt->bind_param('ssssssssss',
+
+        $cargo              = $data['cargo'] ?? null;
+        $codigoModular      = $data['codigo_modular'] ?? null;
+        $direccion          = $data['direccion'] ?? null;
+        $distrito           = $data['distrito'] ?? null;
+        $provincia          = $data['provincia'] ?? null;
+        $region             = $data['region'] ?? null;
+        $telefono           = $data['telefono'] ?? null;
+        $email              = $data['email'] ?? null;
+        $fundamento         = $data['fundamento'] ?? null;
+        $descripcion        = $data['descripcion'] ?? null;
+        $documentosSustento = $data['documentos_sustento'] ?? null;
+        $archivo            = $data['archivo'] ?? null;
+        $ip                 = $data['ip'] ?? '';
+
+        $stmt->bind_param('ssssssssssssssssss',
             $codigo,
             $data['nombres'],
             $data['apellidos'],
             $data['dni'],
-            $data['telefono'],
-            $data['email'],
+            $cargo,
+            $codigoModular,
+            $direccion,
+            $distrito,
+            $provincia,
+            $region,
+            $telefono,
+            $email,
             $data['asunto'],
-            $data['descripcion'],
-            $data['archivo'],
-            $data['ip']
+            $fundamento,
+            $descripcion,
+            $documentosSustento,
+            $archivo,
+            $ip
         );
 
         return $stmt->execute() ? $codigo : false;

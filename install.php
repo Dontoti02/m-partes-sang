@@ -8,21 +8,29 @@ CREATE DATABASE IF NOT EXISTS mesa_partes_sangarara CHARACTER SET utf8mb4 COLLAT
 USE mesa_partes_sangarara;
 
 CREATE TABLE IF NOT EXISTS expedientes (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    codigo      VARCHAR(20) UNIQUE NOT NULL,
-    nombres     VARCHAR(120) NOT NULL,
-    apellidos   VARCHAR(120) NOT NULL,
-    dni         VARCHAR(12) NOT NULL,
-    telefono    VARCHAR(20),
-    email       VARCHAR(120),
-    asunto      VARCHAR(255) NOT NULL,
-    descripcion TEXT,
-    archivo     VARCHAR(255) NULL DEFAULT NULL,
-    estado      ENUM('pendiente','aprobado','rechazado') DEFAULT 'pendiente',
-    comentario  TEXT,
-    ip          VARCHAR(45),
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME ON UPDATE CURRENT_TIMESTAMP
+    id                   INT AUTO_INCREMENT PRIMARY KEY,
+    codigo               VARCHAR(20) UNIQUE NOT NULL,
+    nombres              VARCHAR(120) NOT NULL,
+    apellidos            VARCHAR(120) NOT NULL,
+    dni                  VARCHAR(12) NOT NULL,
+    cargo                VARCHAR(100),
+    codigo_modular       VARCHAR(50),
+    direccion            VARCHAR(255),
+    distrito             VARCHAR(100),
+    provincia            VARCHAR(100),
+    region               VARCHAR(100),
+    telefono             VARCHAR(20),
+    email                VARCHAR(120),
+    asunto               VARCHAR(255) NOT NULL,
+    fundamento           TEXT,
+    descripcion          TEXT,
+    documentos_sustento  TEXT,
+    archivo              VARCHAR(255) NULL DEFAULT NULL,
+    estado               ENUM('pendiente','aprobado','rechazado') DEFAULT 'pendiente',
+    comentario           TEXT,
+    ip                   VARCHAR(45),
+    created_at           DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at           DATETIME ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS administradores (

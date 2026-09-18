@@ -15,17 +15,25 @@ class HomeController extends Controller {
         if ($this->isPost()) {
             $old = $_POST;
 
-            $nombres     = $this->post('nombres');
-            $apellidos   = $this->post('apellidos');
-            $dni         = $this->post('dni');
-            $telefono    = $this->post('telefono');
-            $email       = $this->post('email');
-            $asunto      = $this->post('asunto');
-            $descripcion = $this->post('descripcion');
+            $asunto             = trim($this->post('asunto')); // Solicita
+            $nombres            = trim($this->post('nombres'));
+            $apellidos          = trim($this->post('apellidos'));
+            $dni                = trim($this->post('dni'));
+            $cargo              = trim($this->post('cargo'));
+            $codigo_modular     = trim($this->post('codigo_modular'));
+            $direccion          = trim($this->post('direccion'));
+            $distrito           = trim($this->post('distrito'));
+            $provincia          = trim($this->post('provincia'));
+            $region             = trim($this->post('region'));
+            $telefono           = trim($this->post('telefono'));
+            $email              = trim($this->post('email'));
+            $fundamento         = trim($this->post('fundamento'));
+            $descripcion        = trim($this->post('descripcion'));
+            $documentos_sustento= trim($this->post('documentos_sustento'));
 
             // ── Validaciones ──────────────────────────────────
-            if (!$nombres || !$apellidos || !$dni || !$asunto) {
-                $error = 'Complete todos los campos obligatorios.';
+            if (!$asunto || !$nombres || !$apellidos || !$dni || !$fundamento) {
+                $error = 'Por favor complete los campos obligatorios del FUT (Solicita, Nombres, Apellidos, DNI y Fundamento de lo solicitado).';
 
             } elseif (!preg_match('/^\d{8}$/', $dni)) {
                 $error = 'El DNI debe contener exactamente 8 dígitos numéricos.';
@@ -41,10 +49,10 @@ class HomeController extends Controller {
 
                     if ($file['size'] > 10 * 1024 * 1024) {
                         $error = 'El archivo supera el límite de 10 MB.';
-                    } elseif (!in_array($ext, ['pdf','doc','docx'], true)) {
-                        $error = 'Solo se aceptan archivos PDF, DOC o DOCX.';
+                    } elseif (!in_array($ext, ['pdf','doc','docx','jpg','jpeg','png'], true)) {
+                        $error = 'Solo se aceptan archivos PDF, DOC, DOCX o imágenes JPG/PNG.';
                     } else {
-                        $filename = 'FUT_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                        $filename = 'SUSTENTO_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
                         $dest     = UPLOAD_PATH . $filename;
 
                         if (!move_uploaded_file($file['tmp_name'], $dest)) {
@@ -56,30 +64,30 @@ class HomeController extends Controller {
                 }
 
                 if (!$error) {
-                    $codigo = $this->expedienteModel->create([
-                        'nombres'     => $nombres,
-                        'apellidos'   => $apellidos,
-                        'dni'         => $dni,
-                        'telefono'    => $telefono,
-                        'email'       => $email,
-                        'asunto'      => $asunto,
-                        'descripcion' => $descripcion,
-                        'archivo'     => $filename,
-                        'ip'          => $_SERVER['REMOTE_ADDR'] ?? '',
-                    ]);
+                    $datosExp = [
+                        'nombres'             => $nombres,
+                        'apellidos'           => $apellidos,
+                        'dni'                 => $dni,
+                        'cargo'               => $cargo,
+                        'codigo_modular'      => $codigo_modular,
+                        'direccion'           => $direccion,
+                        'distrito'            => $distrito,
+                        'provincia'           => $provincia,
+                        'region'              => $region,
+                        'telefono'            => $telefono,
+                        'email'               => $email,
+                        'asunto'              => $asunto,
+                        'fundamento'          => $fundamento,
+                        'descripcion'         => $descripcion,
+                        'documentos_sustento' => $documentos_sustento,
+                        'archivo'             => $filename,
+                        'ip'                  => $_SERVER['REMOTE_ADDR'] ?? '',
+                    ];
+
+                    $codigo = $this->expedienteModel->create($datosExp);
 
                     if ($codigo) {
-                        $datosExp = [
-                            'codigo'      => $codigo,
-                            'nombres'     => $nombres,
-                            'apellidos'   => $apellidos,
-                            'dni'         => $dni,
-                            'telefono'    => $telefono,
-                            'email'       => $email,
-                            'asunto'      => $asunto,
-                            'descripcion' => $descripcion,
-                            'archivo'     => $filename,
-                        ];
+                        $datosExp['codigo'] = $codigo;
 
                         $mailOk = Mailer::enviarExpediente($datosExp, $dest);
                         if (!$mailOk) {

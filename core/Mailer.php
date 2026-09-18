@@ -42,49 +42,147 @@ class Mailer {
             $adjuntoLabel = !empty($datos['archivo']) ? htmlspecialchars($datos['archivo']) : '<em>Sin documento adjunto</em>';
             $adjuntoAlt   = !empty($datos['archivo']) ? $datos['archivo'] : 'Sin documento adjunto';
 
-            $mail->Subject = "[" . APP_INST . "] Nuevo Expediente $codigo - $asunto";
+            $cargo              = htmlspecialchars($datos['cargo'] ?? '-');
+            $codigoModular      = htmlspecialchars($datos['codigo_modular'] ?? '-');
+            $direccion          = htmlspecialchars($datos['direccion'] ?? '-');
+            $distrito           = htmlspecialchars($datos['distrito'] ?? '-');
+            $provincia          = htmlspecialchars($datos['provincia'] ?? '-');
+            $region             = htmlspecialchars($datos['region'] ?? '-');
+            $fundamento         = nl2br(htmlspecialchars($datos['fundamento'] ?? '-'));
+            $fundamentoAlt      = $datos['fundamento'] ?? '-';
+            $docsSustento       = nl2br(htmlspecialchars($datos['documentos_sustento'] ?? '-'));
+            $docsSustentoAlt    = $datos['documentos_sustento'] ?? '-';
+            $nombresCompletos   = htmlspecialchars(trim(($datos['apellidos'] ?? '') . ' ' . ($datos['nombres'] ?? '')));
+
+            $mail->Subject = "[" . APP_INST . "] FUT Digital - $codigo - $asunto";
 
             $mail->isHTML(true);
             $mail->Body = "
-<html><body style='font-family:Arial,Helvetica,sans-serif;color:#1f2937;background:#f9fafb;padding:16px 0;margin:0;'>
-  <div style='max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.04);'>
-    <div style='background:#14532d;color:#ffffff;padding:20px 24px;'>
-      <div style='font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:600;opacity:.9;margin-bottom:4px;'>" . APP_INST . "</div>
-      <h2 style='margin:0;font-size:20px;font-weight:700;color:#ffffff;'>Nuevo Expediente Registrado</h2>
-      <p style='margin:4px 0 0;font-size:13px;opacity:.85;color:#ffffff;'>Mesa de Partes Virtual</p>
+<html><body style='font-family:Arial,Helvetica,sans-serif;color:#1f2937;background:#f3f4f6;padding:20px 0;margin:0;'>
+  <div style='max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #d1d5db;border-radius:10px;overflow:hidden;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);'>
+    
+    <!-- Encabezado Oficial -->
+    <div style='background:#14532d;color:#ffffff;padding:24px 28px;text-align:center;'>
+      <div style='font-size:13px;letter-spacing:1px;font-weight:600;opacity:.95;text-transform:uppercase;'>" . APP_INST . "</div>
+      <div style='font-size:11px;opacity:.8;margin-top:2px;'>R.M. N.&ordm; 821-88-ED</div>
+      <h2 style='margin:10px 0 2px;font-size:21px;font-weight:800;letter-spacing:.5px;color:#ffffff;'>FORMULARIO &Uacute;NICO DE TR&Aacute;MITE (FUT) DIGITAL</h2>
+      <div style='display:inline-block;margin-top:8px;background:#15803d;padding:4px 14px;border-radius:20px;font-size:12px;font-family:monospace;letter-spacing:1px;'>EXPEDIENTE: $codigo</div>
     </div>
-    <div style='padding:24px;font-size:14px;line-height:1.7;'>
-      <table style='width:100%;border-collapse:collapse;'>
-        <tr><td style='padding:6px 0;color:#6b7280;width:150px;'>Instituci&oacute;n</td><td><strong>" . APP_INST . "</strong></td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>C&oacute;digo</td><td><strong style='font-size:15px;color:#14532d;font-family:monospace;'>$codigo</strong></td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Nombres</td><td>" . htmlspecialchars($datos['nombres'] ?? '') . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Apellidos</td><td>" . htmlspecialchars($datos['apellidos'] ?? '') . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>DNI</td><td>" . htmlspecialchars($datos['dni'] ?? '') . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Tel&eacute;fono</td><td>" . htmlspecialchars($datos['telefono'] ?? '-') . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Correo solicitante</td><td>" . htmlspecialchars($datos['email'] ?? '-') . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Asunto</td><td><strong>" . htmlspecialchars($asunto) . "</strong></td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Descripci&oacute;n</td><td>" . nl2br(htmlspecialchars($datos['descripcion'] ?? '-')) . "</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Fecha de registro</td><td>$fecha</td></tr>
-        <tr><td style='padding:6px 0;color:#6b7280;'>Documento adjunto</td><td>$adjuntoLabel</td></tr>
-      </table>
+
+    <!-- Destinatario del FUT -->
+    <div style='background:#f0fdf4;border-bottom:1px solid #bbf7d0;padding:12px 28px;font-size:13px;color:#166534;font-weight:700;'>
+      SE&Ntilde;OR DIRECTOR DEL IESTP SANGARAR&Aacute; &ndash; ACOMAYO
+    </div>
+
+    <div style='padding:26px 28px;font-size:14px;line-height:1.6;'>
+
+      <!-- 1. Petitorio -->
+      <div style='background:#f9fafb;border-left:4px solid #14532d;padding:12px 16px;margin-bottom:20px;border-radius:0 6px 6px 0;'>
+        <div style='font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;'>1. Solicito (Petitorio / Asunto)</div>
+        <div style='font-size:16px;font-weight:800;color:#111827;margin-top:4px;'>" . htmlspecialchars($asunto) . "</div>
+      </div>
+
+      <!-- 2. Datos del Usuario -->
+      <div style='margin-bottom:20px;'>
+        <div style='font-size:12px;font-weight:700;color:#14532d;text-transform:uppercase;border-bottom:2px solid #e5e7eb;padding-bottom:4px;margin-bottom:12px;'>
+          2. Datos del Usuario / Solicitante
+        </div>
+        <table style='width:100%;border-collapse:collapse;font-size:13px;'>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;width:150px;'>Apellidos y Nombres:</td>
+            <td style='padding:6px 0;'><strong>$nombresCompletos</strong></td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>N.&ordm; DNI:</td>
+            <td style='padding:6px 0;'><strong>" . htmlspecialchars($datos['dni'] ?? '-') . "</strong></td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>Condici&oacute;n / Cargo:</td>
+            <td style='padding:6px 0;'>$cargo</td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>C&oacute;digo Modular/Est.:</td>
+            <td style='padding:6px 0;'>$codigoModular</td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>Domicilio:</td>
+            <td style='padding:6px 0;'>$direccion</td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>Distrito / Prov. / Regi&oacute;n:</td>
+            <td style='padding:6px 0;'>$distrito / $provincia / $region</td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>Tel&eacute;fono / Celular:</td>
+            <td style='padding:6px 0;'>" . htmlspecialchars($datos['telefono'] ?? '-') . "</td>
+          </tr>
+          <tr>
+            <td style='padding:6px 0;color:#6b7280;'>Correo Electr&oacute;nico:</td>
+            <td style='padding:6px 0;'>" . htmlspecialchars($datos['email'] ?? '-') . "</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 3. Fundamento -->
+      <div style='margin-bottom:20px;'>
+        <div style='font-size:12px;font-weight:700;color:#14532d;text-transform:uppercase;border-bottom:2px solid #e5e7eb;padding-bottom:4px;margin-bottom:8px;'>
+          3. Fundamento de lo Solicitado
+        </div>
+        <div style='background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;padding:12px 16px;font-size:13px;line-height:1.7;color:#374151;'>
+          $fundamento
+        </div>
+      </div>
+
+      <!-- 4. Documentos que adjunta -->
+      <div style='margin-bottom:20px;'>
+        <div style='font-size:12px;font-weight:700;color:#14532d;text-transform:uppercase;border-bottom:2px solid #e5e7eb;padding-bottom:4px;margin-bottom:8px;'>
+          4. Documentos que Adjunta (Sustento)
+        </div>
+        <div style='font-size:13px;color:#374151;margin-bottom:6px;'>
+          <strong>Detalle:</strong> $docsSustento
+        </div>
+        <div style='font-size:13px;color:#374151;'>
+          <strong>Archivo adjunto de sustento:</strong> $adjuntoLabel
+        </div>
+      </div>
+
+      <!-- 5. Fecha y Firma -->
+      <div style='margin-top:24px;border-top:1px dashed #d1d5db;padding-top:16px;font-size:12px;color:#6b7280;'>
+        <table style='width:100%;border-collapse:collapse;'>
+          <tr>
+            <td><strong>Fecha de env&iacute;o:</strong> $fecha</td>
+            <td style='text-align:right;'><strong>Firma virtual:</strong> $nombresCompletos (DNI: " . htmlspecialchars($datos['dni'] ?? '-') . ")</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Pie oficial -->
       <div style='margin-top:24px;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280;text-align:center;'>
         <strong>" . APP_INST . "</strong> &mdash; Mesa de Partes Virtual<br>
-        Correo institucional: <a href='mailto:" . MAIL_TO . "' style='color:#14532d;text-decoration:none;'>" . MAIL_TO . "</a>
+        Bandeja oficial de recepci&oacute;n: <a href='mailto:" . MAIL_TO . "' style='color:#14532d;text-decoration:none;font-weight:600;'>" . MAIL_TO . "</a>
       </div>
+
     </div>
   </div>
 </body></html>";
 
-            $mail->AltBody = "[" . APP_INST . "] Nuevo expediente $codigo - $asunto\n" .
-                "Institución: " . APP_INST . "\n" .
-                "Nombres: " . ($datos['nombres'] ?? '') . "\n" .
-                "Apellidos: " . ($datos['apellidos'] ?? '') . "\n" .
-                "DNI: " . ($datos['dni'] ?? '') . "\n" .
-                "Teléfono: " . ($datos['telefono'] ?? '-') . "\n" .
-                "Correo: " . ($datos['email'] ?? '-') . "\n" .
-                "Asunto: " . $asunto . "\n" .
-                "Descripción: " . ($datos['descripcion'] ?? '-') . "\n" .
-                "Fecha: $fecha\nAdjunto: " . $adjuntoAlt;
+            $mail->AltBody = "FORMULARIO ÚNICO DE TRÁMITE (FUT) DIGITAL - " . APP_INST . "\n" .
+                "EXPEDIENTE: $codigo\n" .
+                "SEÑOR DIRECTOR DEL IESTP SANGARARÁ – ACOMAYO\n\n" .
+                "1. SOLICITO: " . $asunto . "\n\n" .
+                "2. DATOS DEL SOLICITANTE:\n" .
+                "- Apellidos y Nombres: " . trim(($datos['apellidos'] ?? '') . ' ' . ($datos['nombres'] ?? '')) . "\n" .
+                "- DNI: " . ($datos['dni'] ?? '-') . "\n" .
+                "- Condición / Cargo: " . ($datos['cargo'] ?? '-') . "\n" .
+                "- Código Modular/Estudiante: " . ($datos['codigo_modular'] ?? '-') . "\n" .
+                "- Domicilio: " . ($datos['direccion'] ?? '-') . "\n" .
+                "- Ubicación: " . ($datos['distrito'] ?? '-') . " / " . ($datos['provincia'] ?? '-') . " / " . ($datos['region'] ?? '-') . "\n" .
+                "- Teléfono: " . ($datos['telefono'] ?? '-') . "\n" .
+                "- Correo: " . ($datos['email'] ?? '-') . "\n\n" .
+                "3. FUNDAMENTO DE LO SOLICITADO:\n" . $fundamentoAlt . "\n\n" .
+                "4. DOCUMENTOS QUE ADJUNTA:\n" . $docsSustentoAlt . "\n" .
+                "Archivo: " . $adjuntoAlt . "\n\n" .
+                "Fecha de registro: $fecha\nFirma virtual registrada.";
 
             if (!empty($archivoRuta) && file_exists($archivoRuta)) {
                 $mail->addAttachment($archivoRuta, $datos['archivo'] ?? basename($archivoRuta));
